@@ -1,5 +1,7 @@
 package com.example.bookstore_app.auth;
 
+import com.example.bookstore_app.dto.LoginRequest;
+import com.example.bookstore_app.dto.LoginResponse;
 import com.example.bookstore_app.user.User;
 import com.example.bookstore_app.user.UserRepository;
 import com.example.bookstore_app.user.UserRole;
@@ -7,6 +9,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +30,13 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
     @PostMapping("/register")
     @Transactional
     public ResponseEntity<String> registerUser(@Valid @RequestBody User user) {
@@ -40,6 +53,18 @@ public class AuthController {
             return new ResponseEntity<>("User created successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("User could not be created", HttpStatus.BAD_REQUEST);
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
+
+        String jwt = jwtUtil.generateToken(loginRequest.getUsername());
+
+        return ResponseEntity.ok(new LoginResponse(jwt));
     }
 
 }

@@ -1,5 +1,7 @@
-package com.example.bookstore_app.user;
+package com.example.bookstore_app.auth;
 
+import com.example.bookstore_app.user.User;
+import com.example.bookstore_app.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
