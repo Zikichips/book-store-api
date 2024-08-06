@@ -13,7 +13,7 @@ public class Cart {
     @GeneratedValue
     private Long id;
 
-    private int total_price;
+    private Long total_price;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -31,12 +31,15 @@ public class Cart {
         this.id = id;
     }
 
-    public int getTotal_price() {
+    public Long getTotal_price() {
         return total_price;
     }
 
-    public void setTotal_price(int total_price) {
+    public void setTotal_price(Long total_price) {
+        // loop through the items in the cart. check the book, multiply by quantity, and then sum
         this.total_price = total_price;
+
+        // whenever item is added to cart, i need to set the total price again
     }
 
     public User getUser() {

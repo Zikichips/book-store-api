@@ -18,7 +18,7 @@ public class CartService {
     public void createCart(String username) {
         User user = userService.findByUsername(username);
         Cart cart = new Cart();
-        cart.setTotal_price(0);
+        cart.setTotal_price(0L);
         cart.setUser(user);
         cartRepository.save(cart);
 
