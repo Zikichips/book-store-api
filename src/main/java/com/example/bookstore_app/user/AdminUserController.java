@@ -2,16 +2,18 @@ package com.example.bookstore_app.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-public class UserController {
+@RequestMapping("/admin/api")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminUserController {
     private UserService userService;
 
-    public UserController(UserService userService) {
+    public AdminUserController(UserService userService) {
         this.userService = userService;
     }
 

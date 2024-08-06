@@ -1,9 +1,8 @@
 package com.example.bookstore_app.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.bookstore_app.cart.Cart;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.lang.NonNull;
@@ -29,6 +28,10 @@ public class User {
     @NonNull
     @NotEmpty(message = "password cannot be empty")
     private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Cart cart;
 
     @Column(nullable = false)
     private UserRole role;
@@ -74,5 +77,13 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

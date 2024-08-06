@@ -3,6 +3,7 @@ package com.example.bookstore_app.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,14 +30,16 @@ public class UserService {
     public boolean updateUser(Long id, User user) {
         User userToUpdate = this.findUserById(id);
         if(userToUpdate != null) {
-            user.setId(userToUpdate.getId());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
+            userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+            userToUpdate.setUsername(user.getUsername());
+            userToUpdate.setEmail(user.getEmail());
+            userRepository.save(userToUpdate);
             return true;
         }
         return false;
     }
 
+    @Transactional
     public boolean deleteUserById(Long id) {
         User userToDelete = this.findUserById(id);
         if(userToDelete != null) {

@@ -2,6 +2,7 @@ package com.example.bookstore_app.cart;
 
 import com.example.bookstore_app.cartItem.CartItem;
 import com.example.bookstore_app.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -17,9 +18,10 @@ public class Cart {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CartItem> cartItems;
 
