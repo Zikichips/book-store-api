@@ -48,30 +48,41 @@ public class CartItemService {
     }
 
     public boolean deleteCartItemById(Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartItem cartItem = cartItemRepository.findById(id).orElse(null);
         if(cartItem != null) {
-            updateCartTotalPriceBeforeDeletion(cartItem);
-            cartItemRepository.delete(cartItem);
-            return true;
+            // check if the cart item belongs to the authenticated user
+            if(userDetails.getUsername().equals(cartItem.getCart().getUser().getUsername())) {
+                updateCartTotalPriceBeforeDeletion(cartItem);
+                cartItemRepository.delete(cartItem);
+                return true;
+            }
         }
         return false;
     }
 
     public CartItem findById(Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartItem cartItem = cartItemRepository.findById(id).orElse(null);
         if(cartItem != null) {
-            return cartItem;
+            // check if the cart item belongs to the authenticated user
+            if(userDetails.getUsername().equals(cartItem.getCart().getUser().getUsername())) {
+                return cartItem;
+            }
         }
         return null;
     }
 
     public boolean updateCartItem(Long id, Long quantity) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartItem cartItem = cartItemRepository.findById(id).orElse(null);
         if(cartItem != null) {
-            cartItem.setQuantity(quantity);
-            cartItemRepository.save(cartItem);
-            updateCartTotalPrice();
-            return true;
+            if(userDetails.getUsername().equals(cartItem.getCart().getUser().getUsername())) {
+                cartItem.setQuantity(quantity);
+                cartItemRepository.save(cartItem);
+                updateCartTotalPrice();
+                return true;
+            }
         }
         return false;
     }
