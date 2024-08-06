@@ -1,5 +1,6 @@
 package com.example.bookstore_app.auth;
 
+import com.example.bookstore_app.cart.CartService;
 import com.example.bookstore_app.dto.LoginRequest;
 import com.example.bookstore_app.dto.LoginResponse;
 import com.example.bookstore_app.user.User;
@@ -36,6 +37,10 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CartService cartService;
+
+
 
     @PostMapping("/register")
     @Transactional
@@ -50,6 +55,7 @@ public class AuthController {
         user.setRole(UserRole.valueOf("SUBSCRIBER"));
         User newUser = userRepository.save(user);
         if(newUser.getId() != null) {
+            cartService.createCart(user.getUsername());
             return new ResponseEntity<>("User created successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("User could not be created", HttpStatus.BAD_REQUEST);

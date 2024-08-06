@@ -47,6 +47,7 @@ public class UserController {
         }
         return new ResponseEntity<>("User could not be deleted", HttpStatus.BAD_REQUEST);
     }
+
 }
 
 

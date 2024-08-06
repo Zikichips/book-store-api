@@ -47,30 +47,4 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authz -> authz
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginProcessingUrl("/api/auth/login") // Adjust login URL for API
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/api/auth/logout") // Adjust logout URL for API
-//                        .permitAll()
-//                );
-//
-//        return http.build();
-//    }
-//
-//
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-//    }
 }
