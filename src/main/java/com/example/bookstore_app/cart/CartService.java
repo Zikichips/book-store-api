@@ -3,6 +3,7 @@ package com.example.bookstore_app.cart;
 import com.example.bookstore_app.user.User;
 import com.example.bookstore_app.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
@@ -27,5 +28,12 @@ public class CartService {
 
     public Cart findCartByUser(User user) {
         return cartRepository.findByUser(user);
+    }
+
+    @Transactional
+    public boolean clearCart(Cart cart) {
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+        return true;
     }
 }

@@ -25,6 +25,9 @@ public class Cart {
     @JsonManagedReference
     private List<CartItem> cartItems;
 
+    public Cart() {
+    }
+
     public Long getId() {
         return id;
     }

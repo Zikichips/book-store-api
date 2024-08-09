@@ -1,20 +1,19 @@
-package com.example.bookstore_app.cartItem;
+package com.example.bookstore_app.orderItem;
 
 import com.example.bookstore_app.book.Book;
-import com.example.bookstore_app.cart.Cart;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.bookstore_app.purchaseOrder.PurchaseOrder;
 import jakarta.persistence.*;
 
 @Entity
-public class CartItem {
+public class OrderItem {
+
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    @JsonBackReference
-    private Cart cart;
+    @JoinColumn(name = "order_id")
+    private PurchaseOrder purchaseOrder;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
@@ -22,7 +21,9 @@ public class CartItem {
 
     private Long quantity;
 
-    public CartItem() {
+    private Long price;
+
+    public OrderItem() {
     }
 
     public Long getId() {
@@ -33,12 +34,12 @@ public class CartItem {
         this.id = id;
     }
 
-    public Cart getCart() {
-        return cart;
+    public PurchaseOrder getOrder() {
+        return purchaseOrder;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
     }
 
     public Book getBook() {
@@ -55,5 +56,13 @@ public class CartItem {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 }

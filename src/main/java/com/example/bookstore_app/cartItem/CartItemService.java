@@ -10,6 +10,7 @@ import com.example.bookstore_app.user.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -47,19 +48,6 @@ public class CartItemService {
         return false;
     }
 
-    public boolean deleteCartItemById(Long id) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CartItem cartItem = cartItemRepository.findById(id).orElse(null);
-        if(cartItem != null) {
-            // check if the cart item belongs to the authenticated user
-            if(userDetails.getUsername().equals(cartItem.getCart().getUser().getUsername())) {
-                updateCartTotalPriceBeforeDeletion(cartItem);
-                cartItemRepository.delete(cartItem);
-                return true;
-            }
-        }
-        return false;
-    }
 
     public CartItem findById(Long id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -87,6 +75,29 @@ public class CartItemService {
         return false;
     }
 
+    public boolean deleteCartItemById(Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CartItem cartItem = cartItemRepository.findById(id).orElse(null);
+        if(cartItem != null) {
+            // check if the cart item belongs to the authenticated user
+            if(userDetails.getUsername().equals(cartItem.getCart().getUser().getUsername())) {
+//                updateCartTotalPriceBeforeDeletion(cartItem);
+
+                // detach the cartitem from the cart
+                cartItem.getCart().getCartItems().remove(cartItem);
+
+                // update cart total price
+                updateCartTotalPrice();
+
+                // delete cartitem
+                cartItemRepository.delete(cartItem);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void updateCartTotalPrice() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
@@ -99,6 +110,7 @@ public class CartItemService {
         cartRepository.save(cart);
     }
 
+    @Transactional
     private void updateCartTotalPriceBeforeDeletion(CartItem cartItem) {
         Cart cart = cartItem.getCart();
         long updatedPrice = cart.getCartItems().stream()

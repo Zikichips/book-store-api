@@ -1,16 +1,10 @@
 package com.example.bookstore_app.cartItem;
 
-import com.example.bookstore_app.cart.Cart;
 import com.example.bookstore_app.cart.CartService;
-import com.example.bookstore_app.user.User;
 import com.example.bookstore_app.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -55,21 +49,12 @@ public class CartItemController {
 
     @DeleteMapping("/cartitem/{id}")
     public ResponseEntity<String> removeItemFromCart(@PathVariable Long id) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername());
-        Cart cart = cartService.findCartByUser(user);
-        if(cart != null) {
-            Optional<CartItem> cartItemToDelete = cart.getCartItems().stream()
-                    .filter(cartItem -> cartItem.getId().equals(id))
-                    .findFirst();
-            if(cartItemToDelete.isPresent()) {
-                boolean deleted = cartItemService.deleteCartItemById(id);
-                if(deleted) {
-                    return new ResponseEntity<>("Item deleted from cart", HttpStatus.OK);
-                }
-            }
+        boolean deleted = cartItemService.deleteCartItemById(id);
+        if(deleted) {
+            return new ResponseEntity<>("Item deleted from cart", HttpStatus.OK);
         }
         return new ResponseEntity<>("Could not delete item from cart" , HttpStatus.BAD_REQUEST);
+
     }
 
 }
