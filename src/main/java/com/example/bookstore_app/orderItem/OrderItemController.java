@@ -10,11 +10,8 @@ public class OrderItemController {
         this.orderItemService = orderItemService;
     }
 
-//    public boolean createOrderItem() {
-//        boolean orderItemAdded = orderItemService.createOrderItem(orderItem);
-//        if(orderItemAdded) {
-//            return true;
-//        }
-//        return false;
+//    @GetMapping("/orders")
+//    public ResponseEntity<List<OrderItem>> getAllOrders() {
+//        List<OrderItem> orderItems = orderItemService.getAllUserOrders();
 //    }
 }

@@ -1,11 +1,14 @@
 package com.example.bookstore_app.user;
 
 import com.example.bookstore_app.cart.Cart;
+import com.example.bookstore_app.purchaseOrder.PurchaseOrder;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.lang.NonNull;
+
+import java.util.List;
 
 @Entity
 public class User {
@@ -32,6 +35,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<PurchaseOrder> orders;
 
     @Column(nullable = false)
     private UserRole role;
@@ -85,5 +92,13 @@ public class User {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public List<PurchaseOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<PurchaseOrder> orders) {
+        this.orders = orders;
     }
 }

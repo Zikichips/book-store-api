@@ -2,7 +2,9 @@ package com.example.bookstore_app.purchaseOrder;
 
 import com.example.bookstore_app.orderItem.OrderItem;
 import com.example.bookstore_app.user.User;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // help prevent infinite loop
 public class PurchaseOrder {
 
     @Id
@@ -18,7 +21,7 @@ public class PurchaseOrder {
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
 
     private LocalDate orderDate;
@@ -30,7 +33,6 @@ public class PurchaseOrder {
     private PaymentStatus paymentStatus;
 
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
 
 

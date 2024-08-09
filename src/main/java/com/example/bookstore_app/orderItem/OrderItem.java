@@ -2,9 +2,12 @@ package com.example.bookstore_app.orderItem;
 
 import com.example.bookstore_app.book.Book;
 import com.example.bookstore_app.purchaseOrder.PurchaseOrder;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // help prevent infinite loop
 public class OrderItem {
 
     @Id
@@ -13,6 +16,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+//    @JsonBackReference
     private PurchaseOrder purchaseOrder;
 
     @ManyToOne

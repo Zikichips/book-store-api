@@ -51,8 +51,6 @@ public class PurchaseOrderService {
         newPurchaseOrder.setPaymentStatus(PaymentStatus.PENDING);
         PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.save(newPurchaseOrder);
 
-        System.out.println("Order Created - Status Pending");
-
         // Populate order items with cart items
         if(savedPurchaseOrder.getId() != null) {
 
@@ -69,32 +67,39 @@ public class PurchaseOrderService {
             savedPurchaseOrder.setPaymentStatus(PaymentStatus.PAID);
             purchaseOrderRepository.save(savedPurchaseOrder);
 
-            System.out.println("Order paid - Status Paid");
-
             // empty cart if successful
 
             cart.getCartItems().removeAll(cart.getCartItems());
 
-//            List<CartItem> cartItemsToDelete = cart.getCartItems().stream()
-//                    .filter(cartItem -> cartItemService.findById(cartItem.getId()))
-//                    .collect(Collectors.toList());
-////            cart.getCartItems().forEach(cartItem -> cartItemService.deleteCartItemById(cartItem.getId()));
-//            boolean cartItemsDeleted = cart.getCartItems().stream()
-//                            .map(cartItem -> cartItemService.deleteCartItemById(cartItem.getId()))
-//                    .allMatch(deleted -> deleted);
-
-            System.out.println("CartItems cleared");
             boolean cartEmpty = cartService.clearCart(cart);
             cartItemService.updateCartTotalPrice();
             if(cartEmpty) {
                 savedPurchaseOrder.setPaymentStatus(PaymentStatus.COMPLETED);
                 purchaseOrderRepository.save(savedPurchaseOrder);
-                System.out.println("Cart cleared - Status Completed");
                 return true;
             }
             return false;
         }
 
         return false;
+    }
+
+    public List<PurchaseOrder> getAllUserOrders() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        return user.getOrders();
+    }
+
+    public PurchaseOrder getOrderById(Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        PurchaseOrder purchaseOrder = user.getOrders().stream()
+                .filter(order -> order.getId() == id)
+                .findFirst().orElse(null);
+        if(purchaseOrder.getId() != null) {
+            return purchaseOrder;
+        }
+        return null;
     }
 }

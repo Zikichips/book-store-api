@@ -2,14 +2,17 @@ package com.example.bookstore_app.orderItem;
 
 import com.example.bookstore_app.cartItem.CartItem;
 import com.example.bookstore_app.purchaseOrder.PurchaseOrder;
+import com.example.bookstore_app.user.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderItemService {
     private OrderItemRepository orderItemRepository;
+    private UserService userService;
 
-    public OrderItemService(OrderItemRepository orderItemRepository) {
+    public OrderItemService(OrderItemRepository orderItemRepository, UserService userService) {
         this.orderItemRepository = orderItemRepository;
+        this.userService = userService;
     }
 
     public OrderItem createOrderItem(CartItem cartItem, PurchaseOrder savedPurchaseOrder) {
@@ -24,4 +27,13 @@ public class OrderItemService {
         }
         return null;
     }
+
+//    public List<OrderItem> getAllUserOrders() {
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        User user = userService.findByUsername(userDetails.getUsername());
+//
+////        List<OrderItem> userOrders = user.getOrders();
+//
+//
+//    }
 }
