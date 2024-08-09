@@ -41,6 +41,7 @@ public class User {
     private List<PurchaseOrder> orders;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     public User() {

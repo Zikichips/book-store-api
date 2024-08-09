@@ -8,6 +8,10 @@ public class BookstoreAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookstoreAppApplication.class, args);
+
+		// Stripe integeration
+		// Search feature
+		// authorization for certain endpoints
 	}
 
 }
