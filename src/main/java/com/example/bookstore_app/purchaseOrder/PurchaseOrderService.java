@@ -51,6 +51,10 @@ public class PurchaseOrderService {
         newPurchaseOrder.setPaymentStatus(PaymentStatus.PENDING);
         PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.save(newPurchaseOrder);
 
+        //check if cart is initially empty
+        if(cart.getCartItems().isEmpty()) {
+            return false;
+        }
         // Populate order items with cart items
         if(savedPurchaseOrder.getId() != null) {
 
