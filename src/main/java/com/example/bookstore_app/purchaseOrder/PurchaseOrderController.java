@@ -31,16 +31,5 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/order")
-    public ResponseEntity<String> createOrder(@RequestBody PurchaseOrderProcessingDTO orderShippingAddressDTO) {
-        boolean orderCreated = purchaseOrderService.createOrder(orderShippingAddressDTO);
-
-        if(orderCreated) {
-            return new ResponseEntity<>("Order created successfully", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Order could not be created", HttpStatus.BAD_REQUEST);
-
-    }
-
 
 }

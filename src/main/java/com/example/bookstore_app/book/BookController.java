@@ -30,6 +30,12 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Book>> searchBooks(@RequestParam String query) {
+//        List<Book> books = bookService.searchBooks(query);
+//        return ResponseEntity.ok(books);
+//    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/api/books")
     public ResponseEntity<String> createBook(@RequestBody Book book) {

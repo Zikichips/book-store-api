@@ -1,13 +1,13 @@
 package com.example.bookstore_app.purchaseOrder;
 
 public class PurchaseOrderProcessingDTO {
-    private String shippingAddress;
+    private String address;
 
-    public String getShippingAddress() {
-        return shippingAddress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

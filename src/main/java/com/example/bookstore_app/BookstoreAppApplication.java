@@ -11,7 +11,7 @@ public class BookstoreAppApplication {
 
 		// Stripe integeration
 		// Search feature
-		// authorization for certain endpoints
+		// email notifications
 	}
 
 }

@@ -28,6 +28,10 @@ public class BookService {
         return false;
     }
 
+//    public List<Book> searchBooks(String searchTerm) {
+//        return bookRepository.searchBooks(searchTerm);
+//    }
+
     public boolean updateBookById(Long id, Book book) {
         Book oldBook = this.getBookById(id);
         if(oldBook != null) {

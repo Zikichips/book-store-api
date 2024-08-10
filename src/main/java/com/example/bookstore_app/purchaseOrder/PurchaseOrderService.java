@@ -7,6 +7,8 @@ import com.example.bookstore_app.orderItem.OrderItem;
 import com.example.bookstore_app.orderItem.OrderItemService;
 import com.example.bookstore_app.user.User;
 import com.example.bookstore_app.user.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class PurchaseOrderService {
     }
 
     @Transactional
-    public boolean createOrder(PurchaseOrderProcessingDTO shippingAddress) {
+    public void createOrder(String address) {
         // Get cart associated with the authenticated user
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
@@ -45,7 +47,7 @@ public class PurchaseOrderService {
         // create order
         PurchaseOrder newPurchaseOrder = new PurchaseOrder();
         newPurchaseOrder.setUser(user);
-        newPurchaseOrder.setShippingAddress(shippingAddress.getShippingAddress());
+        newPurchaseOrder.setShippingAddress(address);
         newPurchaseOrder.setOrderDate(LocalDate.now());
         newPurchaseOrder.setTotalAmount(cart.getTotal_price());
         newPurchaseOrder.setPaymentStatus(PaymentStatus.PENDING);
@@ -53,7 +55,8 @@ public class PurchaseOrderService {
 
         //check if cart is initially empty
         if(cart.getCartItems().isEmpty()) {
-            return false;
+            new ResponseEntity<>("Order could not be created", HttpStatus.BAD_REQUEST);
+            return;
         }
         // Populate order items with cart items
         if(savedPurchaseOrder.getId() != null) {
@@ -80,12 +83,15 @@ public class PurchaseOrderService {
             if(cartEmpty) {
                 savedPurchaseOrder.setPaymentStatus(PaymentStatus.COMPLETED);
                 purchaseOrderRepository.save(savedPurchaseOrder);
-                return true;
+                new ResponseEntity<>("Order created successfully", HttpStatus.OK);
+                return;
+
             }
-            return false;
+            new ResponseEntity<>("Order could not be created", HttpStatus.BAD_REQUEST);
+            return;
         }
 
-        return false;
+        new ResponseEntity<>("Order could not be created", HttpStatus.BAD_REQUEST);
     }
 
     public List<PurchaseOrder> getAllUserOrders() {
